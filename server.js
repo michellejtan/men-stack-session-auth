@@ -6,6 +6,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
+const authController = require("./controllers/auth.js"); // relative path
+
 
 
 // intialize express app
@@ -31,6 +33,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
 // Morgan for logging HTTP requests
 app.use(morgan('dev'));
+
+// fun fact!
+app.use('/auth', authController);
+// any HTTP requests from the brower that come to /auth...
+// will automatically be forward to the router cide
+// inside of the 
 
 // mount routes
 app.get('/', (req, res) => {
