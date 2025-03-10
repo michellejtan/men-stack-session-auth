@@ -7,8 +7,7 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
 const authController = require("./controllers/auth.js"); // relative path
-
-
+const session = require('express-session');
 
 // intialize express app
 const app = express();
@@ -33,6 +32,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
 // Morgan for logging HTTP requests
 app.use(morgan('dev'));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false, // more efficient to be false instead of true
+}));
 
 // fun fact!
 app.use('/auth', authController);
@@ -42,7 +46,9 @@ app.use('/auth', authController);
 
 // mount routes
 app.get('/', (req, res) => {
-  res.render('index.ejs');
+  res.render('index.ejs', {
+    user: req.session.user,
+  });
 });
 
 
